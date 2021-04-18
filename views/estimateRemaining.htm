@@ -1,0 +1,17 @@
+<script type="text/javascript">
+	$(function() {
+		attachSubmit('#estimate_remaining_btn');
+	});
+</script>
+<form class="form" id="estimate_remaining_form">
+	<input type="number" class="form-control mb-3" id="loan_amt" name="loan_amt" placeholder="Total Loan Amount" min="0" step=".01" required>
+	<input type="number" class="form-control mb-3" id="total_payment_amt" name="total_payment_amt" placeholder="Total Payment Amount" min="0" step=".01" required>
+	<input type="number" class="form-control mb-3" id="fee_amt" name="fee_amt" placeholder="Fee Amount (Escrow)" min="0" step=".01" required>
+	<input type="number" class="form-control mb-3" id="interest_rate" name="interest_rate" placeholder="Interest Rate" min="0" step=".01" required>
+	<select name="frequency" id="frequency" class="form-control">
+		<repeat group="{{ @frequencies }}" value="{{ @frequency }}">
+			<option value="{{ @frequency.value }}">{{ @frequency.name }}</option>
+		</repeat>
+	</select>
+</form>
+<button id="estimate_remaining_btn" class="btn btn-primary" data-url="estimate-remaining" data-form="estimate_remaining_form">Submit</button>

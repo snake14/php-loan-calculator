@@ -1,0 +1,17 @@
+<script type="text/javascript">
+	$(function() {
+		attachSubmit('#estimate_payment_btn');
+	});
+</script>
+<form class="form" id="estimate_payment_form">
+	<input type="number" class="form-control mb-3" id="loan_amt" name="loan_amt" placeholder="Total Loan Amount" min="0" step=".01" required>
+	<input type="number" class="form-control mb-3" id="fee_amt" name="fee_amt" placeholder="Fee Amount (Escrow)" min="0" step=".01" required>
+	<input type="number" class="form-control mb-3" id="interest_rate" name="interest_rate" placeholder="Interest Rate" min="0" step=".01" required>
+	<select name="unit_type" id="unit_type" class="form-control mb-3">
+		<repeat group="{{ @unitTypes }}" value="{{ @unitTypes }}">
+			<option value="{{ @unitTypes.value }}">{{ @unitTypes.name }}</option>
+		</repeat>
+	</select>
+	<input type="number" class="form-control" id="unit_amt" name="unit_amt" placeholder="Number of Units" min="0" step=".01" required>
+</form>
+<button id="estimate_payment_btn" class="btn btn-primary" data-url="estimate-payment" data-form="estimate_payment_form">Submit</button>
