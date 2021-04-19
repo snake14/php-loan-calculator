@@ -1,6 +1,8 @@
 <?php
 	namespace Helpers;
 
+	use \Classes\DislayableError;
+
 	class Loan {
 		// Number of payments per year.
 		const MONTHLY_PAYMENT = 12;
@@ -13,10 +15,12 @@
 			[ 'name' => 'Weekly', 'value' => self::WEEKLY_PAYMENT ],
 		];
 	
+		const UNIT_TYPE_YEAR = 12;
+		const UNIT_TYPE_MONTH = 1;
 		// This is for specifying the duration of the loan, like a 30 or 15 year mortgage.
 		const UNIT_TYPES = [
-			[ 'name' => 'Years', 'value' => 'YEAR' ],
-			[ 'name' => 'Months', 'value' => 'MONTH' ],
+			[ 'name' => 'Years', 'value' => self::UNIT_TYPE_YEAR ],
+			[ 'name' => 'Months', 'value' => self::UNIT_TYPE_MONTH ],
 		];
 
 		/**
@@ -31,6 +35,10 @@
 		 * @return array containing payment breakdown, like principal, interesti, fees, and remaining principal.
 		 */
 		public static function calculatePayment(float $loan_amount, float $total_pay_amount, float $fee_amount, float $interest_rate, int $pay_frequency): array {
+			if(!in_array($pay_frequency, array_column(self::PAYMENT_FREQUENCIES, 'value'))) {
+				throw new DislayableError("The provided payment frequency is not a valid option.");
+			}
+
 			$interest = ($loan_amount * ($interest_rate / 100)) / $pay_frequency;
 			$principal = $total_pay_amount - $fee_amount;
 			$principal = $principal - $interest;
@@ -48,21 +56,23 @@
 		 * @param float $loan_amount is the total amount of principal remaining on the loan.
 		 * @param float $fee_amount is to account for any other fees, like mortgage insurance or escrow.
 		 * @param float $interest_rate is the annual interest rate for the loan.
-		 * @param string $term_type is the unit of time used to calculate the lifetime of the loan, like year or month.
+		 * @param integer $term_type is the unit of time used to calculate the lifetime of the loan, like year or month.
 		 * @param integer $term_num is the number of units of time used to calculate the lifetime of the loan, like 30 or 15.
 		 * @return float is the float dollar amount of the total monthly payment of the loan.
 		 */
-		public static function estimatePaymentAmount(float $loan_amount, float $fee_amount, float $interest_rate, string $term_type, int $term_num) : float {
-			if($term_type == 'YEAR') {
-				$total_months = $term_num * 12;
-				$monthly_rate = ($interest_rate / 100) / 12;
-				$dividend = $loan_amount * ($monthly_rate * pow((1 + $monthly_rate), $total_months));
-				$divisor = pow((1 + $monthly_rate), $total_months) - 1;
-				$monthly_payment = ($dividend / $divisor);
-				$monthly_payment = $monthly_payment + $fee_amount;
-
-				return $monthly_payment;
+		public static function estimatePaymentAmount(float $loan_amount, float $fee_amount, float $interest_rate, int $term_type, int $term_num) : float {
+			if(!in_array($term_type, array_column(self::UNIT_TYPES, 'value'))) {
+				throw new DislayableError("The provided term unit type is not a valid option.");
 			}
+			
+			$total_months = $term_num * $term_type;
+			$monthly_rate = ($interest_rate / 100) / 12;
+			$dividend = $loan_amount * ($monthly_rate * pow((1 + $monthly_rate), $total_months));
+			$divisor = pow((1 + $monthly_rate), $total_months) - 1;
+			$monthly_payment = ($dividend / $divisor);
+			$monthly_payment = $monthly_payment + $fee_amount;
+
+			return $monthly_payment;
 		}
 
 		/**

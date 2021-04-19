@@ -3,8 +3,18 @@
 
 	use PHPUnit\Framework\TestCase;
 	use \Helpers\Loan;
+	use \Classes\DislayableError;
 	
 	final class LoanTest extends TestCase {
+		public function testCalculatePaymentError() {
+			try {
+				Loan::calculatePayment(300000, 1800, 500, 3.25, 12345);
+				$this->fail('This should have failed with an invalid payment frequency.');
+			} catch (DislayableError $de) {
+				$this->assertStringContainsString('The provided payment frequency is not a valid option.', $de->getMessage());
+			}
+		}
+
 		public function testCalculatePayment(): void {
 			$result = Loan::calculatePayment(300000, 1800, 500, 3.25, Loan::MONTHLY_PAYMENT);
 			$this->assertNotEmpty($result);
@@ -23,16 +33,40 @@
 			$this->assertSame(249937.5, $result['remaining_principal']);
 		}
 
+		public function testEstimatePaymentAmountError() {
+			try {
+				Loan::estimatePaymentAmount(300000, 500, 3.25, 12345, 30);
+				$this->fail('This should have failed with an invalid unit type.');
+			} catch (DislayableError $de) {
+				$this->assertStringContainsString('The provided term unit type is not a valid option.', $de->getMessage());
+			}
+		}
+
 		public function testEstimatePaymentAmount(): void {
-			$result = Loan::estimatePaymentAmount(300000, 500, 3.25, Loan::UNIT_TYPES[0]['value'], 30);
+			$result = Loan::estimatePaymentAmount(300000, 500, 3.25, Loan::UNIT_TYPE_YEAR, 30);
 			$this->assertNotEmpty($result);
 			$this->assertSame('1,805.62', number_format($result, 2));
 		}
 
 		public function testEstimatePaymentAmountLowerAmount(): void {
-			$result = Loan::estimatePaymentAmount(250000, 200, 4.5, Loan::UNIT_TYPES[0]['value'], 30);
+			$result = Loan::estimatePaymentAmount(250000, 200, 4.5, Loan::UNIT_TYPE_YEAR, 30);
 			$this->assertNotEmpty($result);
 			$this->assertSame('1,466.71', number_format($result, 2));
+		}
+
+		public function testEstimatePaymentAmountWithMonths(): void {
+			$result = Loan::estimatePaymentAmount(300000, 500, 3.25, Loan::UNIT_TYPE_MONTH, 360);
+			$this->assertNotEmpty($result);
+			$this->assertSame('1,805.62', number_format($result, 2));
+		}
+
+		public function testCalculatePayoffTimeError() {
+			try {
+				Loan::calculatePayoffTime(300000, 1800, 500, 3.25, 12345);
+				$this->fail('This should have failed with an invalid payment frequency.');
+			} catch (DislayableError $de) {
+				$this->assertStringContainsString('The provided payment frequency is not a valid option.', $de->getMessage());
+			}
 		}
 
 		public function testCalculatePayoffTime() {
