@@ -3,14 +3,14 @@
 
 	use PHPUnit\Framework\TestCase;
 	use \Helpers\Loan;
-	use \Classes\DislayableError;
+	use \Classes\DisplayableError;
 	
 	final class LoanTest extends TestCase {
 		public function testCalculatePaymentError() {
 			try {
 				Loan::calculatePayment(300000, 1800, 500, 3.25, 12345);
 				$this->fail('This should have failed with an invalid payment frequency.');
-			} catch (DislayableError $de) {
+			} catch (DisplayableError $de) {
 				$this->assertStringContainsString('The provided payment frequency is not a valid option.', $de->getMessage());
 			}
 		}
@@ -37,7 +37,7 @@
 			try {
 				Loan::estimatePaymentAmount(300000, 500, 3.25, 12345, 30);
 				$this->fail('This should have failed with an invalid unit type.');
-			} catch (DislayableError $de) {
+			} catch (DisplayableError $de) {
 				$this->assertStringContainsString('The provided term unit type is not a valid option.', $de->getMessage());
 			}
 		}
@@ -64,7 +64,7 @@
 			try {
 				Loan::calculatePayoffTime(300000, 1800, 500, 3.25, 12345);
 				$this->fail('This should have failed with an invalid payment frequency.');
-			} catch (DislayableError $de) {
+			} catch (DisplayableError $de) {
 				$this->assertStringContainsString('The provided payment frequency is not a valid option.', $de->getMessage());
 			}
 		}

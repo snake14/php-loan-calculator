@@ -1,7 +1,7 @@
 <?php
 	namespace Helpers;
 
-	use \Classes\DislayableError;
+	use \Classes\DisplayableError;
 
 	class Loan {
 		// Number of payments per year.
@@ -36,7 +36,7 @@
 		 */
 		public static function calculatePayment(float $loan_amount, float $total_pay_amount, float $fee_amount, float $interest_rate, int $pay_frequency): array {
 			if(!in_array($pay_frequency, array_column(self::PAYMENT_FREQUENCIES, 'value'))) {
-				throw new DislayableError("The provided payment frequency is not a valid option.");
+				throw new DisplayableError("The provided payment frequency is not a valid option.");
 			}
 
 			$interest = ($loan_amount * ($interest_rate / 100)) / $pay_frequency;
@@ -62,7 +62,7 @@
 		 */
 		public static function estimatePaymentAmount(float $loan_amount, float $fee_amount, float $interest_rate, int $term_type, int $term_num) : float {
 			if(!in_array($term_type, array_column(self::UNIT_TYPES, 'value'))) {
-				throw new DislayableError("The provided term unit type is not a valid option.");
+				throw new DisplayableError("The provided term unit type is not a valid option.");
 			}
 			
 			$total_months = $term_num * $term_type;

@@ -2,7 +2,7 @@
     namespace Controllers;
 
 	use \Helpers\Loan;
-	use \Classes\DislayableError;
+	use \Classes\DisplayableError;
 
     class LoanCalculator {
         public function getMainPage($f3, $params) {
@@ -30,7 +30,7 @@
 			echo \json_encode([ 'success' => true, 'result' => $result ]);
 			} catch (\Throwable $th) {
 				// Only display the error message directly to the user if it's a specific subclass of Exception that we use.
-				$result = $th instanceof DislayableError ? $th->getMessage() : "There was an issue calculating the answer.";
+				$result = $th instanceof DisplayableError ? $th->getMessage() : "There was an issue calculating the answer.";
 				echo \json_encode([ 'success' => false, 'result' => $result ]);
 			}
 		}
@@ -53,7 +53,7 @@
 				echo \json_encode([ 'success' => true, 'result' => $result ]);
 			} catch (\Throwable $th) {
 				// Only display the error message directly to the user if it's a specific subclass of Exception that we use.
-				$result = $th instanceof DislayableError ? $th->getMessage() : "There was an issue calculating the answer.";
+				$result = $th instanceof DisplayableError ? $th->getMessage() : "There was an issue calculating the answer.";
 				echo \json_encode([ 'success' => false, 'result' => $result ]);
 			}
 		}
@@ -73,7 +73,7 @@
 				echo \json_encode([ 'success' => true, 'result' => $result ]);
 			} catch (\Throwable $th) {
 				// Only display the error message directly to the user if it's a specific subclass of Exception that we use.
-				$result = $th instanceof DislayableError ? $th->getMessage() : "There was an issue calculating the answer.";
+				$result = $th instanceof DisplayableError ? $th->getMessage() : "There was an issue calculating the answer.";
 				echo \json_encode([ 'success' => false, 'result' => $result ]);
 			}
 		}
