@@ -31,10 +31,10 @@
 		 * @return array containing payment breakdown, like principal, interesti, fees, and remaining principal.
 		 */
 		public static function calculatePayment(float $loan_amount, float $total_pay_amount, float $fee_amount, float $interest_rate, int $pay_frequency): array {
-			$interest = number_format(($loan_amount * ($interest_rate / 100)) / $pay_frequency, 2);
+			$interest = ($loan_amount * ($interest_rate / 100)) / $pay_frequency;
 			$principal = $total_pay_amount - $fee_amount;
-			$principal = $principal - floatval(str_replace(',', '', $interest));
-			$remaining_principal = number_format($loan_amount - $principal, 2);
+			$principal = $principal - $interest;
+			$remaining_principal = $loan_amount - $principal;
 
 			return [ 'principal' => $principal, 'interest' => $interest, 'other' => $fee_amount, 'remaining_principal' => $remaining_principal ];
 		}
@@ -50,16 +50,16 @@
 		 * @param float $interest_rate is the annual interest rate for the loan.
 		 * @param string $term_type is the unit of time used to calculate the lifetime of the loan, like year or month.
 		 * @param integer $term_num is the number of units of time used to calculate the lifetime of the loan, like 30 or 15.
-		 * @return string is the formatted dollar amount of the total monthly payment of the loan.
+		 * @return float is the float dollar amount of the total monthly payment of the loan.
 		 */
-		public static function estimatePaymentAmount(float $loan_amount, float $fee_amount, float $interest_rate, string $term_type, int $term_num) : string {
+		public static function estimatePaymentAmount(float $loan_amount, float $fee_amount, float $interest_rate, string $term_type, int $term_num) : float {
 			if($term_type == 'YEAR') {
 				$total_months = $term_num * 12;
 				$monthly_rate = ($interest_rate / 100) / 12;
 				$dividend = $loan_amount * ($monthly_rate * pow((1 + $monthly_rate), $total_months));
 				$divisor = pow((1 + $monthly_rate), $total_months) - 1;
 				$monthly_payment = ($dividend / $divisor);
-				$monthly_payment = number_format($monthly_payment + $fee_amount, 2);
+				$monthly_payment = $monthly_payment + $fee_amount;
 
 				return $monthly_payment;
 			}
@@ -90,8 +90,8 @@
 			// Calculate the interest for the final payment.
 			$interest = ($remaining_principal * ($interest_rate / 100)) / $pay_frequency;
 			$total_interest += $interest;
-			$total_interest = number_format($total_interest, 2);
-			$final_payment_amt = number_format($remaining_principal + $fee_amount + $interest);
+			$total_interest = $total_interest;
+			$final_payment_amt = $remaining_principal + $fee_amount + $interest;
 			$payment_count++;
 
 			// Calculate the number of months based on the number of payments and the payment frequency;

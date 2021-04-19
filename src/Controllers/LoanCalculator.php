@@ -19,11 +19,11 @@
 			$result = '';
 
 			$payment = Loan::calculatePayment($loan_amount, $payment_amount, $fee_amount, $rate, $payment_frequency);
-			$result = "Total Payment: \${$payment_amount}<br>";
-			$result .= "Principal: \${$payment['principal']}<br>";
-			$result .= "Interest: \${$payment['interest']}<br>";
-			$result .= "Other: \${$fee_amount}<br>";
-			$result .= "Remaining Principal: \${$payment['remaining_principal']}";
+			$result = 'Total Payment: $' . number_format($payment_amount, 2) . '<br>';
+			$result .= 'Principal: $' . number_format($payment['principal'], 2) . '<br>';
+			$result .= 'Interest: $' . number_format($payment['interest'], 2) . '<br>';
+			$result .= 'Other: $' . number_format($fee_amount, 2) . '<br>';
+			$result .= 'Remaining Principal: $' . number_format($payment['remaining_principal'], 2);
 
 			echo \json_encode([ 'success' => true, 'result' => $result ]);
 		}
@@ -37,10 +37,10 @@
 			$result = '';
 
 			$payoff = \Helpers\Loan::calculatePayoffTime($loan_amount, $payment_amount, $fee_amount, $rate, $frequency);
-			$result = "Total Payments: {$payoff['number_of_payments']}<br>";
-			$result .= "Total Months: {$payoff['number_of_months']}<br>";
-			$result .= "Final Payment Amount: \${$payoff['final_payment_amount']}<br>";
-			$result .= "Total Interest: \${$payoff['total_interest']}<br>";
+			$result = 'Total Payments: ' . number_format($payoff['number_of_payments']) . '<br>';
+			$result .= 'Total Months: ' . number_format($payoff['number_of_months']) . '<br>';
+			$result .= 'Final Payment Amount: $' . number_format($payoff['final_payment_amount'], 2) . '<br>';
+			$result .= 'Total Interest: $' . number_format($payoff['total_interest'], 2) . '<br>';
 
 			echo \json_encode([ 'success' => true, 'result' => $result ]);
 		}
@@ -54,7 +54,7 @@
 			$result = '';
 
 			$payment = Loan::estimatePaymentAmount($loan_amount, $fee_amount, $rate, $unit_type, $unit_amt);
-			$result = "Payment Amount: \${$payment}";
+			$result = 'Payment Amount: $' . number_format($payment, 2);
 
 			echo \json_encode([ 'success' => true, 'result' => $result ]);
 		}
