@@ -8,5 +8,6 @@
 	$f3->route('POST /calculate-payment-breakdown', 'Controllers\LoanCalculator->calculatePaymentBreakdown');
 	$f3->route('POST /estimate-remaining', 'Controllers\LoanCalculator->estimateRemaining');
 	$f3->route('POST /estimate-payment', 'Controllers\LoanCalculator->estimatePayment');
+	$f3->set('TEMP', __DIR__ . '/tmp/');
 	$f3->run();
 ?>
